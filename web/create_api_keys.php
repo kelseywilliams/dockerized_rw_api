@@ -27,7 +27,8 @@
         $mysqli = new mysqli(
             $hostname = $DB_HOST, 
             $username = $DB_USERNAME, 
-            $database = $DB
+            $database = $DB,
+            $port = 3306
         );
 
     } catch (Exception $e) {
