@@ -37,7 +37,7 @@ services:
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: "true"
     # Runs seed file and exits
-    entrypoint: [ "bash", "-c", "sleep 10 && mysql --user=root --host=db --port=3306 api < /db.sql && exit"] 
+    entrypoint: [ "bash", "-c", "sleep 30 && mysql --user=root --host=127.0.0.1 --port=3306 api < /db.sql && exit"] 
     depends_on:
       - db
 
