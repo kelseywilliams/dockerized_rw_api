@@ -1,0 +1,67 @@
+input{
+    margin:10px;
+    font-size:16px;
+}
+code{
+    background-color:lightgray;
+}
+.docs{
+    word-wrap: break-word;
+}
+footer{
+    padding-bottom: 10px;
+    background-color: deepskyblue;
+    padding-top: 2px;
+}
+/*Shamless css stealing*/
+.submit {
+    margin:10px;
+    background-color: orange;
+    border-radius: 1px;
+    cursor: pointer;
+    color: black;
+    font-family: monospace;
+    font-size: 16px;
+    padding: 3px 20px;
+    text-decoration: none;
+    vertical-align:bottom;
+    border:none;
+}
+.submit:hover {
+    background-color:orangered;
+}
+.submit:active {
+    position:relative;
+    top:1px;
+}
+.home {
+    margin:10px;
+    background-color: skyblue;
+    border-radius: 1px;
+    cursor: pointer;
+    color: black;
+    font-family: monospace;
+    font-size: 16px;
+    padding: 3px 20px;
+    text-decoration: none;
+    vertical-align:bottom;
+    border:none;
+}
+.home:hover {
+    background-color:steelblue;
+}
+.home:active {
+    position:relative;
+    top:1px;
+}
+/* Create top border */
+.top-border {
+    /* Stolen from the web.  Cool gradients */
+    height:55px;
+}
+.top-border h1{
+    border-bottom:0;
+    margin:0;
+    padding-top:10px;
+    padding-left:10px;
+}

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>kelseywilliams.net api</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="style.css">
+        <!-- An external source.  Prone to breaking, yet excellent for consitency and non repetition-->
+        <link rel="stylesheet" href="https://kelseywilliams.net/style.css">
+    </head>
+    <body>
+        <div>
+            <div class="top-border">
+                <h1>kelseywilliams.net api</h1>
+            </div>
+        </div>
+        <button class="home" id="home" onclick="location.href='https://kelseywilliams.net/'">Home</button>
+        <form action="create_api_keys.php" method="POST">
+            <p>enter your email to recieve an api key.</p>
+            <input name="email" id="email" required pattern="^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$" placeholder="jsmith@example.com">
+            <button class="submit" type="submit" id="submit">Send</button>
+        </form>
+        <div id="docs" class="docs">
+            <h2>description</h2>
+            <p>kelseywilliams.net api is a lightweight api designed to transfer a small json string with fields data, date, a flag, and an id across the web with a simple request to <code>https://api.kelseywilliams.net/handler.php</code>.  this api is perfect for small projects that don't want to buy web hosting, but still want to get some data to another local network.  supports GET, POST, PUT, and DELETE.</p>
+            <h2>documentation</h2>
+            <h3>api key specifics</h3>
+            <p>all requests should be made to <code>https://api.kelseywilliams.net/handler.php</code><br><br>api key has a standard rate limit of 1 request every second.  exceeding this number of requests will result in a status code of 429 Too Many Requests.  if your key has expired, the api will return 401 Unauthorized.   as of right now, api keys are set to expire after 7 days allowing for a theoretical maximum of 604,800 requests.  an email address can only be used once to create a key.  if a key expires and you would like to create another key please send an email to admin@kelseywilliams.net to request a new key.  this is in order to prevent potential spam as this api is more of a proof of concept and not designed for rigorous use.  perhaps this will change in the future.</p>
+            <h3>request: GET (indempotent)</h3>
+            <p>use this request to fetch all existing resources.  for example, loading existing comments on a forum.<br><br>request must contain a field titled "key" with a value of the client's api key.<br><br>returns JSON string and response code 200 Ok or a response code of 400 Bad Request if the api key used is invalid.<br><br>example: <code>https://api.kelseywilliams.net/handler.php?key=some_api_key</code></p>
+            <h3>request: POST (non-indempotent)</h3>
+            <p>use this request to create a new resource.  for example, posting a new comment to a forum.  note: it is recommeneded that each resource have a unique id.<br><br>request must contain a url encoded string with the fields "key", "data", "date", "flag" and "id" with values of the client's api key and four strings with a maximum character count of 16,777,215, 255, 255, and 16,777,215, respectively.<br><br>returns a response code of 201 Created if the resource was successfully created or a response code of 200 Ok if the resource was not properly created or a response code of 400 Bad Request if the api key used is invalid or one of the key and value pairs is missing from the url.<br><br>example in python's requests library: <code>requests.post("https://api.kelseywilliams.net/handler.php", data = {"key" : "some_api_key", "data" : "Hello World!", "date" : "1/1/1970", "flag" : "false", "id" : "1234"})</code></p>
+            <h3>request: PUT (indemptoent)</h3>
+            <p>use this request to update the data, date, or flag of a resource with a specific id.  for example, changing a chat messages status to "read."<br><br>request must contain a url encoded string with the field "key" and "id" with the values of the clients key and the resource id, which has a maximum character count of 16,777,215.  Any or all of the fields "data", "date", and "flag" may be added to the url with the values of the three strings having a maximum character count of 16,777,215, 255, and 255 respectively.<br><br>returns a response code of 201 Created if the resources were updated successfully or a response code of 204 No Content if no resources were updated or a response code of 400 Bad Request if the api key used is invalid or one of the key and value pairs is missing from the url.<br><br>example in python's requests library: <code>requests.put("https://api.kelseywilliams.net/handler.php", data = {"key" : "some_api_key", "data" : "Hello World!", "date" : "1/1/1970", "flag" : "false", "id" : "1234"})</code></p>
+            <h3>request: DELETE (indempotent)</h3>
+            <p>use this request to delete a resource.  for example, deleting a chat message.<br><br>request must contain a message body with the field "key" with the value of the client's api key and an optional field of "id" with the value of a resource's id.  if no id is provided, <b>all rows on the table will be deleted.</b>  otherwise, only the resource whose id matches that specified in the request body will be deleted.<br><br>returns a response code of 204 No Content when the resource or resources have been deleted or a response code of 400 Bad Request if the api key used is invalid or one of the key and value pairs is missing from the url.<br><br>example in python's requests library: <code>requests.delete("https://api.kelseywilliams.net/handler.php", data = {"key" : "some_api_key", "id" : "1234"})</code></p>
+        </div>
+        <footer>
+            <p>Updated 8.2.2021</p>
+        </footer>
+    </body>
+    <script src="script.js"></script>
+</html>

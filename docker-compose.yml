@@ -1,0 +1,48 @@
+# Most current docker compose version
+version: "3.8"
+
+# Services are parts of the app each containing instructions for each image to be created in docker
+services:
+  # Web service of the app AKA Apache and PHP service
+  web:
+    # builds image from ./web/Dockerfile
+    build: ./web
+    # Maps container http port to host port 8080
+    ports:
+      - 8080:80
+
+  # Creates db service using mysql
+  db:
+    # Calls latest mysql image
+    image: mysql
+    # Sets enviromnet variables
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "true"
+      MYSQL_DATABASE: api
+    restart: always
+    # Mount volume r3free
+    volumes:
+      - api:/var/lib/mysql
+    ports:
+      - "3306:3306"
+
+  # Create database seeding service
+  db_seeder:
+    # Pulls latest mysql image
+    image: mysql
+    # Mount seed file to db.sql
+    volumes:
+      - ./database/migrations/seed.sql:/db.sql
+    # Sets enviromnet variables
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "true"
+    # Runs seed file and exits
+    entrypoint: [ "bash", "-c", "sleep 10 && mysql --user=root --host=db --port=3306 api < /db.sql && exit"] 
+    depends_on:
+      - db
+
+
+# Volume to hold history/legacy data 
+volumes:
+  api:
+
