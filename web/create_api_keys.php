@@ -23,11 +23,17 @@
             exit();
         }
         
+        try {
         $mysqli = new mysqli(
             $hostname = $DB_HOST, 
             $username = $DB_USERNAME, 
             $database = $DB
         );
+
+    } catch (Exception $e) {
+        echo $e;
+        die("Connection failed: ". $e->getMessage());
+    }
 
         $result = $mysqli->query("SELECT * FROM api_keys WHERE email=\"" . $client_email . "\";");
         echo $mysqli->error;
