@@ -1,3 +1,4 @@
 FROM mysql
 
-COPY ./migrations ./migrations
+
+COPY ./migrations/* /migrations/
