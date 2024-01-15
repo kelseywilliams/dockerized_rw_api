@@ -1,5 +1,4 @@
 <?php
-    var_dump(function_exists('mysqli_connect'));
     $METHOD = $_SERVER["REQUEST_METHOD"];
     if($METHOD == "POST"){
         session_start();
@@ -22,19 +21,8 @@
             header("Location: /", 301);
             exit();
         }
-        
-        try {
-        $mysqli = new mysqli(
-            $hostname = $DB_HOST, 
-            $username = $DB_USERNAME, 
-            $database = $DB,
-            $port = 3306
-        );
 
-    } catch (Exception $e) {
-        echo $e;
-        die("Connection failed: ". $e->getMessage());
-    }
+        $mysqli = new mysqli($DB_HOST, $DB_USERNAME, "", $DB);
 
         $result = $mysqli->query("SELECT * FROM api_keys WHERE email=\"" . $client_email . "\";");
         echo $mysqli->error;
@@ -46,12 +34,17 @@
         }
 
         $mysqli->set_charset("utf8mb4");
-        $result = $mysqli->query("INSERT INTO api_keys (api_key, expiration, last_op, email) VALUES (\"" . $key . "\", " . $expiration . ", " . $last_op . ", \"" . $client_email . "\");");
+        try{
+            $result = $mysqli->query("INSERT INTO api_keys (api_key, expiration, last_op, email) VALUES (\"" . $key . "\", " . $expiration . ", " . $last_op . ", \"" . $client_email . "\");");
+        }
+        catch(Exception $e){
+            echo $mysqli->error;
+        }
         // If key was created and placed in database successfully
-        if($result){
+        if(!$result){
             $create_table = $mysqli->query("CREATE TABLE " . $hash . " (data MEDIUMTEXT, date TINYTEXT, flag TINYTEXT, id MEDIUMTEXT);");
             // If table was created under api key successfully
-            if($create_table){
+            if(!$create_table){
                 ini_set( 'display_errors', 1 );
                 error_reporting( E_ALL );
                 $from = "admin@kelseywilliams.net";
@@ -67,7 +60,7 @@
                     $_SESSION["error"] = "Error: An error occured when trying to send the email to " . $client_email . ".  No email was sent and no key was issued.  Please try again or contact the website adminstrator.";
                     $mysqli->query("DELETE FROM api_keys WHERE api_key=\"" . $key . "\";");
                 }
-                $_SESSION["success"] = "Success: Your api key has been sent to " . $client_email . "! Read below for instructions on how to use the service.  Enjoy!";
+                $_SESSION["success"] = "$result . Success: Your api key has been sent to " . $client_email . "! Read below for instructions on how to use the service.  Enjoy!";
 
             }
             else{

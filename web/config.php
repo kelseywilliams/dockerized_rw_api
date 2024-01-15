@@ -1,6 +1,6 @@
 <?php
     $config=array(
-        'host'=>'127.0.0.1',
+        'host'=>'db',
         'username'=>'root',
         'password'=> '',
         'db'=>'api'
