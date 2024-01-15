@@ -2,7 +2,7 @@
     $config=array(
         'host'=>'127.0.0.1',
         'username'=>'root',
-        'password'=>null,
+        'password'=> '',
         'db'=>'api'
         );
     return $config;

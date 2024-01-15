@@ -25,21 +25,24 @@ services:
       - api:/var/lib/mysql
     ports:
       - "3306:3306"
-
+    healthcheck:
+      test: mysql -u root -h 127.0.0.1 -e '\q' || exit 1
+      interval: 10s
+      timeout: 40s
+      retries: 4
+      start_period: 10s
   # Create database seeding service
   db_seeder:
     # Pulls latest mysql image
-    image: mysql
-    # Mount seed file to db.sql
-    volumes:
-      - ./database/migrations/seed.sql:/db.sql
+    build: ./database 
     # Sets enviromnet variables
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: "true"
     # Runs seed file and exits
-    entrypoint: [ "bash", "-c", "sleep 30 && mysql --user=root --host=127.0.0.1 --port=3306 api < /db.sql && exit"] 
+    entrypoint: [ "bash", "-c", "mysqldump -u root -h 127.0.0.1 api < ./migrations/seed.sql"] 
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
 
 # Volume to hold history/legacy data 
