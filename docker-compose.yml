@@ -27,19 +27,19 @@ services:
       - "3306:3306"
     healthcheck:
       test: mysql -u root -h 127.0.0.1 -e '\q' || exit 1
-      interval: 10s
-      timeout: 40s
-      retries: 4
-      start_period: 10s
+      interval: 1s
+      timeout: 5s
+      retries: 50
+      start_period: 15s
   # Create database seeding service
   db_seeder:
-    # Pulls latest mysql image
+    # builds database seeder from dockerfile in ./database
     build: ./database 
     # Sets enviromnet variables
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: "true"
     # Runs seed file and exits
-    entrypoint: [ "bash", "-c", "mysqldump -u root -h 127.0.0.1 api < ./migrations/seed.sql"] 
+    entrypoint: [ "bash", "-c", "mysql -u root -h 127.0.0.1 api < ./migrations/seed.sql"] 
     depends_on:
       db:
         condition: service_healthy
